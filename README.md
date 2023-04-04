@@ -1,2 +1,4 @@
-# CSGO_DeathMath_DM
-CSGO DeathMatch Mode
+# Upgrade Deathmatch mode in CSGO
+
+Functional:
+·| WeaponMenu
