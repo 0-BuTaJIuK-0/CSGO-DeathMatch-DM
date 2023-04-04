@@ -44,20 +44,20 @@ public OnClientPutInServer(client)
 {
 	if (CheckClient(client))
 	{
-		//strcopy(g_PrimaryGuns[client], sizeof(g_PrimaryGuns[]), "weapon_ak47");
-		//strcopy(g_SecondaryGuns[client], sizeof(g_SecondaryGuns[]), "weapon_deagle");
+		strcopy(g_PrimaryGuns[client], sizeof(g_PrimaryGuns[]), "weapon_ak47");
+		strcopy(g_SecondaryGuns[client], sizeof(g_SecondaryGuns[]), "weapon_deagle");
 	}
 }
 
 public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	new client_index = GetClientOfUserId(GetEventInt(event, "userid"))
-	GivePrimary(client_index);
-	GiveSecondary(client_index);
-	if(g_ClientFirstConnect[client_index])
+	new client = GetClientOfUserId(GetEventInt(event, "userid"))
+	GivePrimary(client);
+	GiveSecondary(client);
+	if(g_ClientFirstConnect[client])
 	{
-		GunMenu(client_index);
-		CGOPrintToChat(client_index, "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] Для открытия меню выбора оружия используйте - {RED}[G]");
+		GunMenu(client);
+		CGOPrintToChat(client, "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] Для открытия меню выбора оружия используйте - {RED}[G]");
 	}
 }
 
@@ -208,30 +208,30 @@ bool CheckClient(int client) // Проверка игрока
 	return (IsClientInGame(client) && !IsFakeClient(client));
 }
 
-stock GivePrimary(client_index)
+stock GivePrimary(client)
 {
-	if (IsPlayerAlive(client_index))
+	if (IsPlayerAlive(client))
 	{
-		RemoveWeaponBySlot(client_index, Slot_Primary);
-		GivePlayerItem(client_index, g_PrimaryGuns[client_index]);
+		RemoveWeaponBySlot(client, Slot_Primary);
+		GivePlayerItem(client, g_PrimaryGuns[client]);
 	}
 }
 
-stock GiveSecondary(client_index)
+stock GiveSecondary(client)
 {
-	if (IsPlayerAlive(client_index))
+	if (IsPlayerAlive(client))
 	{
-	RemoveWeaponBySlot(client_index, Slot_Secondary);
-	GivePlayerItem(client_index, g_SecondaryGuns[client_index]);
+	RemoveWeaponBySlot(client, Slot_Secondary);
+	GivePlayerItem(client, g_SecondaryGuns[client]);
 	}
 }
 
-stock bool:RemoveWeaponBySlot(client_index, Slots:slot)
+stock bool:RemoveWeaponBySlot(client, Slots:slot)
 {
-	new entity_index = GetPlayerWeaponSlot(client_index, _:slot);
+	new entity_index = GetPlayerWeaponSlot(client, _:slot);
 	if (entity_index>0)
 	{
-		RemovePlayerItem(client_index, entity_index);
+		RemovePlayerItem(client, entity_index);
 		AcceptEntityInput(entity_index, "Kill");
 		return true;
 	}
