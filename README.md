@@ -1,4 +1,4 @@
 # Upgrade Deathmatch mode in CSGO
 
-Functional:
+All functional:
 ·| WeaponMenu
