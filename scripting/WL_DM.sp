@@ -9,3 +9,8 @@ public Plugin:myinfo =
 	url = "https://wildleague.pro"
 };
 
+public OnPluginStart()	
+{
+	RegConsoleCmd("sm_guns", MainMenu);
+}
+
