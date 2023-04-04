@@ -1,7 +1,7 @@
 # Deathmatch (DM) mode in CSGO
 
 ## Info
-This does not change the standard Deathmatch mode, but only complements it and removes unnecessary functional
+This does not change the standard Deathmatch mode, but only complements it and removes unnecessary functional.
 
 ## Functional 
 - WeaponMenu
