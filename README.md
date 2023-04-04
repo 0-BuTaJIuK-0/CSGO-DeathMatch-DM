@@ -1,6 +1,6 @@
 # Deathmatch (DM) mode in CSGO
 
-## Functional:  
+## Functional 
 - WeaponMenu
 
 ## Use
