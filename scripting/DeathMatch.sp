@@ -32,11 +32,14 @@ enum Teams
 new String:g_PrimaryGuns[32][32];
 new String:g_SecondaryGuns[32][32];
 new bool:g_ClientFirstConnect[MAXPLAYERS+1] = {true, ...};
+int g_CountAvailableAwp;
+int g_CountUsedClientsAwp;
 
 public OnPluginStart()	
 {
 	RegConsoleCmd("sm_guns", GunMenuKostil);
 	RegConsoleCmd("sm_gun", GunMenuKostil);
+	RegConsoleCmd("sm_testcount", iCountFuncKostil);
 	HookEvent("player_spawn", Event_PlayerSpawn);
 }
 
@@ -46,18 +49,66 @@ public OnClientPutInServer(client)
 	{
 		strcopy(g_PrimaryGuns[client], sizeof(g_PrimaryGuns[]), "weapon_ak47");
 		strcopy(g_SecondaryGuns[client], sizeof(g_SecondaryGuns[]), "weapon_deagle");
+		iCountFuncAvailableAwp();
 	}
 }
+
+public OnClientDisconnect_Post(client)
+{
+	if (CheckClient(client))
+	{
+		strcopy(g_PrimaryGuns[client], sizeof(g_PrimaryGuns[]), "weapon_ak47");
+		strcopy(g_SecondaryGuns[client], sizeof(g_SecondaryGuns[]), "weapon_deagle");
+		g_ClientFirstConnect[client] = true;
+		iCountFuncAvailableAwp();
+		iCountFuncUsedClientsAwp();
+	}
+}
+
+
+iCountFuncAvailableAwp() 
+{
+	//int iCount = GetClientCount(); // Один из вариантов хука кол-во слотов, но с ботом GOTV
+	int iCount = 0;
+	for(new i = 1; i <= MaxClients; i++)
+	{
+		if(CheckClient(i))
+		{
+			iCount++;
+		}
+	}
+	g_CountAvailableAwp = iCount * 50 / 100;
+}
+
+iCountFuncUsedClientsAwp()
+{
+	int iCount = 0;
+	for(new i = 1; i <= MaxClients; i++)
+	{
+		if(CheckClient(i))
+		{
+			if(StrEqual(g_PrimaryGuns[i],"weapon_awp"))
+			{
+				iCount++
+			}
+		}
+	}
+	g_CountUsedClientsAwp = iCount;
+}
+
 
 public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new client = GetClientOfUserId(GetEventInt(event, "userid"))
-	GivePrimary(client);
-	GiveSecondary(client);
-	if(g_ClientFirstConnect[client])
+	if(CheckClient(client))
 	{
-		GunMenu(client);
-		CGOPrintToChat(client, "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] Для открытия меню выбора оружия используйте - {RED}[G]");
+		GivePrimary(client);
+		GiveSecondary(client);
+		if(g_ClientFirstConnect[client])
+		{
+			GunMenu(client);
+			CGOPrintToChat(client, "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] Для открытия меню выбора оружия используйте - {RED}[G]");
+		}
 	}
 }
 
@@ -66,7 +117,7 @@ public Action:CS_OnBuyCommand(client, const String:weapon[])
 { 
 	char szWeapon[32];
 	Format(szWeapon, sizeof(szWeapon), "weapon_%s", weapon);
-	if(strcmp(szWeapon, "weapon_ak47") == 0 || strcmp(szWeapon, "weapon_m4a1") == 0 || strcmp(szWeapon, "weapon_m4a1_silencer") == 0 || strcmp(szWeapon, "weapon_awp") == 0 || strcmp(szWeapon, "weapon_sg556") == 0 || strcmp(szWeapon, "weapon_aug") == 0 ||
+	if(strcmp(szWeapon, "weapon_ak47") == 0 || strcmp(szWeapon, "weapon_m4a1") == 0 || strcmp(szWeapon, "weapon_m4a1_silencer") == 0 || strcmp(szWeapon, "weapon_sg556") == 0 || strcmp(szWeapon, "weapon_aug") == 0 ||
 	strcmp(szWeapon, "weapon_galilar") == 0 || strcmp(szWeapon, "weapon_famas") == 0 || strcmp(szWeapon, "weapon_nova") == 0 || strcmp(szWeapon, "weapon_xm1014") == 0 || strcmp(szWeapon, "weapon_sawedoff") == 0 || strcmp(szWeapon, "weapon_mag7") == 0 ||
 	strcmp(szWeapon, "weapon_mac10") == 0 || strcmp(szWeapon, "weapon_mp9") == 0 || strcmp(szWeapon, "weapon_mp7") == 0 || strcmp(szWeapon, "weapon_mp5sd") == 0 || strcmp(szWeapon, "weapon_ump45") == 0 || strcmp(szWeapon, "weapon_p90") == 0 ||
 	strcmp(szWeapon, "weapon_bizon") == 0 || strcmp(szWeapon, "weapon_ssg08") == 0 || strcmp(szWeapon, "weapon_m249") == 0 || strcmp(szWeapon, "weapon_negev") == 0)
@@ -78,15 +129,25 @@ public Action:CS_OnBuyCommand(client, const String:weapon[])
 	{
 		strcopy(g_SecondaryGuns[client], sizeof(g_SecondaryGuns[]), szWeapon);
 	}
-	else if(strcmp(szWeapon, "weapon_g3sg1") == 0 || strcmp(szWeapon, "weapon_scar20") == 0 )
+	else if(strcmp(szWeapon, "weapon_g3sg1") == 0 || strcmp(szWeapon, "weapon_scar20") == 0)
 	{
 		CGOPrintToChat(client, "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] Автоматические снайперские винтовки - {RED}ЗАПРЕЩЕНЫ");
 		return Plugin_Handled; 
 	}
+	else if(strcmp(szWeapon, "weapon_awp") == 0)
+	{
+		if (g_CountUsedClientsAwp >= g_CountAvailableAwp)
+		{
+			CGOPrintToChat(client, "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] Ограниченное кол-во {GREEN}AWP{DEFAULT}, что бы снять ограничение, приобретите - {OLIVE}PREMIUM");
+			return Plugin_Handled; 
+		}
+		else
+		{
+			strcopy(g_PrimaryGuns[client], sizeof(g_PrimaryGuns[]), szWeapon);
+		}
+	}
+	iCountFuncUsedClientsAwp();
 }
-
-
-
 
 
 
@@ -95,16 +156,53 @@ public Action:GunMenuKostil(client, args)
 	GunMenu(client);
 }
 
+public Action:iCountFuncKostil(client, args) // КОССТЫЛЬ НА ПРОВЕРКУ
+{
+	PrintToChatAll("g_CountAvailableAwp %i", g_CountAvailableAwp);
+	PrintToChatAll("g_CountUsedClientsAwp %i", g_CountUsedClientsAwp);
+}
+
+/*
+CheckUsedClientWeaponInMenu(client,NameWeapon,NameInMenu)
+{
+	if (StrEqual(g_PrimaryGuns[client],NameWeapon))
+	{
+		return gMenu.AddItem(NameWeapon, NameInMenu, ITEMDRAW_DISABLED);
+	}
+	else
+	{
+		return gMenu.AddItem("weapon_ak47", "AK47");
+	}
+}
+*/
+
 public Action:GunMenu(client)
 {
 	Menu gMenu = new Menu(MenuHandler_gzMenu, MenuAction_Select|MenuAction_Cancel);
 
 	gMenu.SetTitle("Выбор Основного оружия:\n ");
+ /* // Отключать пушки, которые уже у тебя.
+	char WeaponName[32];
+	WeaponName = g_PrimaryGuns[client];
+	PrintToChatAll("%s", WeaponName);
 
+	if (!StrEqual(WeaponName,"weapon_ak47"))
+	{gMenu.AddItem("weapon_ak47", "AK47");}
+	else{gMenu.AddItem("weapon_ak47", "AK47 (use)", ITEMDRAW_DISABLED);}
+*/
 	gMenu.AddItem("weapon_ak47", "AK-47");
 	gMenu.AddItem("weapon_m4a1", "M4A4");
 	gMenu.AddItem("weapon_m4a1_silencer", "M4A1-S");
-	gMenu.AddItem("weapon_awp", "AWP");
+
+	if (g_CountUsedClientsAwp >= g_CountAvailableAwp)
+	{
+		gMenu.AddItem("weapon_awp", "AWP (PREMIUM)", ITEMDRAW_DISABLED);
+	}
+	else
+	{
+		gMenu.AddItem("weapon_awp", "AWP");
+	}
+
 	gMenu.AddItem("weapon_sg556", "SG 553");
 	gMenu.AddItem("weapon_aug", "AUG");
 
@@ -139,9 +237,18 @@ public MenuHandler_gzMenu(Menu gzMenu, MenuAction action, int client, int item)
 		{
 			char weapon_name[32];
 			gzMenu.GetItem(item, weapon_name, sizeof(weapon_name));
-			strcopy(g_PrimaryGuns[client], sizeof(g_PrimaryGuns[]), weapon_name);
-			GivePrimary(client);
-			GunSecondoryMenu(client);
+			if (g_CountUsedClientsAwp >= g_CountAvailableAwp && StrEqual(weapon_name,"weapon_awp"))
+			{
+				CGOPrintToChat(client, "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] Кто-то успел взять {GREEN}AWP{DEFAULT} быстрее Вас.");
+				GunMenu(client);
+			}
+			else
+			{
+				strcopy(g_PrimaryGuns[client], sizeof(g_PrimaryGuns[]), weapon_name);
+				iCountFuncUsedClientsAwp();
+				GivePrimary(client);
+				GunSecondoryMenu(client);
+			}
 		}
         case MenuAction_End:
         {
@@ -203,7 +310,7 @@ public MenuHandler_gszMenu(Menu gszMenu, MenuAction action, int client, int item
 
 
 
-bool CheckClient(int client) // Проверка игрока
+bool CheckClient(int client)
 {
 	return (IsClientInGame(client) && !IsFakeClient(client));
 }
