@@ -15,5 +15,5 @@ This does not change the standard Deathmatch mode, but only complements it and r
 - config (I'll post it soon)
 
 ## Thanks
-[Grey83(gunmenu)](https://github.com/Grey83/SourceMod-plugins/blob/master/SM/scripting/css_gunmenu.sp)
+[Grey83(gunmenu)](https://github.com/Grey83/SourceMod-plugins/blob/master/SM/scripting/css_gunmenu.sp)  
 [Alexey-Gamov(csgo-advanced-dm)](https://github.com/alexey-gamov/csgo-advanced-dm)
