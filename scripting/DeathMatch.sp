@@ -32,6 +32,16 @@ new Handle:g_FlagUnlimitedAWP;
 
 public OnPluginStart()	
 {
+	if (GetEngineVersion() != Engine_CSGO)
+	{
+		SetFailState("ERROR: This plugin is designed only for CS:GO");
+	}
+
+	if (GetConVarInt(FindConVar("game_mode")) != 2 || GetConVarInt(FindConVar("game_type")) != 1)
+	{
+		SetFailState("ERROR: This plugin is designed only for DM game mode");
+	}
+
 	g_PercentAWPPlayers = CreateConVar("dm_PercentAWPPlayers", "35", "Sets the percentage of players who can take awp (100 - allow all)", _, true, 0.0, true, 100.0);
 	g_FlagUnlimitedAWP = CreateConVar("dm_FlagUnlimitedAWP", "o", "Specifies the flag of the players who have unlimited use of AWP available");
 
@@ -40,6 +50,8 @@ public OnPluginStart()
 	RegConsoleCmd("sm_testcount", iCountFuncKostil);
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookConVarChange(g_PercentAWPPlayers, iCountFuncAvailableAwpKostil);
+
+	LoadTranslations("csgo_deathmath.phrases");
 }
 
 // ****************************************************************************************************************************************************************************************************
@@ -86,7 +98,7 @@ public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 		if(g_ClientFirstConnect[client])
 		{
 			GunMenu(client);
-			CGOPrintToChat(client, "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] Для открытия меню выбора оружия используйте - {RED}[G]");
+			CGOPrintToChat(client, "%T%T", "Prefix", client, "How to buy", client, "G");
 		}
 	}
 }
@@ -150,7 +162,7 @@ public Action:CS_OnBuyCommand(client, const String:weapon[])
 	}
 	else if(strcmp(szWeapon, "weapon_g3sg1") == 0 || strcmp(szWeapon, "weapon_scar20") == 0)
 	{
-		CGOPrintToChat(client, "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] Автоматические снайперские винтовки - {RED}ЗАПРЕЩЕНЫ");
+		CGOPrintToChat(client, "%T%T", "Prefix", client, "Baned AutoSniper", client);
 		return Plugin_Handled; 
 	}
 	else if(strcmp(szWeapon, "weapon_awp") == 0)
@@ -163,7 +175,7 @@ public Action:CS_OnBuyCommand(client, const String:weapon[])
 		}
 		else
 		{
-			CGOPrintToChat(client, "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] Ограниченное кол-во {GREEN}AWP{DEFAULT}, что бы снять ограничение, приобретите - {OLIVE}PREMIUM");
+			CGOPrintToChat(client, "%T%T", "Prefix", client, "Message when buying via B awp", client);
 			return Plugin_Handled; 
 		}
 	}
@@ -182,7 +194,10 @@ public Action:GunMenu(client)
 {
 	Menu gMenu = new Menu(MenuHandler_gzMenu, MenuAction_Select|MenuAction_Cancel);
 
-	gMenu.SetTitle("Выбор Основного оружия:\n ");
+	char szBuffer[64];
+	FormatEx(szBuffer, sizeof(szBuffer), "%T", "Title Primary GunMenu", client);
+
+	gMenu.SetTitle(szBuffer);
 	/* // Отключать пушки, которые уже у тебя.
 	char WeaponName[32];
 	WeaponName = g_PrimaryGuns[client];
@@ -255,7 +270,7 @@ public MenuHandler_gzMenu(Menu gzMenu, MenuAction action, int client, int item)
 				}
 				else
 				{
-					CGOPrintToChat(client, "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] Кто-то успел взять {GREEN}AWP{DEFAULT} быстрее Вас.");
+					CGOPrintToChat(client, "%T%T", "Prefix", client, "Too late to take awp", client);
 					GunMenu(client);
 				}
 			}
@@ -278,7 +293,10 @@ public Action:GunSecondoryMenu(client)
 {
 	Menu gsMenu = new Menu(MenuHandler_gszMenu, MenuAction_Select|MenuAction_Cancel);
 
-	gsMenu.SetTitle("Выбор Вторичного оружия:\n ");
+	char szBuffer[64];
+	FormatEx(szBuffer, sizeof(szBuffer), "%T", "Title Secondary GunMenu", client);
+
+	gsMenu.SetTitle(szBuffer);
 
 	gsMenu.AddItem("weapon_glock", "Glock-18");
 	gsMenu.AddItem("weapon_usp_silencer", "USP-S");

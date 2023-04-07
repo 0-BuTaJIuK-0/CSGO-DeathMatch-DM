@@ -1,0 +1,47 @@
+"Phrases"
+{
+	//csgo_colors.inc "{DEFAULT}", "{RED}", "{LIGHTPURPLE}", "{GREEN}", "{LIME}", "{LIGHTGREEN}", "{LIGHTRED}", "{GRAY}", "{LIGHTOLIVE}", "{OLIVE}", "{LIGHTBLUE}", "{BLUE}", "{PURPLE}", "{GRAYBLUE}"
+
+	"Prefix"
+	{
+		"en"      "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] "
+		"ru"      "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] "
+	}
+
+	"How to buy"
+	{
+		"#format" "{1:s}"
+		"en"      "To open the weapon selection menu, use - {RED}[{1}]"
+		"ru"      "Для открытия меню выбора оружия, используйте - {RED}[{1}]"
+	}
+
+	"Baned AutoSniper"
+	{
+		"en"      "Automatic sniper rifles - {RED}PROHIBITED"
+		"ru"      "Автоматические снайперские винтовки - {RED}ЗАПРЕЩЕНЫ"
+	}
+
+	"Message when buying via B awp"
+	{
+		"en"      "Limited number of {GREEN}AWP{DEFAULT}, to remove the restriction, purchase - {OLIVE}PREMIUM"
+		"ru"      "Ограниченное кол-во {GREEN}AWP{DEFAULT}, что бы снять ограничение, приобретите - {OLIVE}PREMIUM"	
+	}
+
+	"Too late to take awp"
+	{
+		"en"      "Someone took {GREEN}AWP{DEFAULT} faster than you."
+		"ru"      "Кто-то успел взять {GREEN}AWP{DEFAULT} быстрее Вас."	
+	}
+
+	"Title Primary GunMenu"
+	{
+		"en"      "Choosing Primary weapon:\n "
+		"ru"      "Выбор Основного оружия:\n "	
+	}
+
+	"Title Secondary GunMenu"
+	{
+		"en"      "Choosing Secondary weapon:\n "
+		"ru"      "Выбор Вторичного оружия:\n "	
+	}
+}
