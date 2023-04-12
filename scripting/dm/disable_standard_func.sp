@@ -1,11 +1,6 @@
 Handle g_Assister;
 Handle g_Victim;
 
-public DSFEvent_PlayerSpawn(client)
-{
-	SetEntProp(client, Prop_Send, "m_iHideHUD", 1 << 12);
-}
-
 void RemoveSound(int client)
 {
 	StopSound(client, SNDCHAN_ITEM, "buttons/bell1.wav");

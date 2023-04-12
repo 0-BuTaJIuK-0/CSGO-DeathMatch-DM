@@ -85,7 +85,6 @@ public Event_PlayerSpawn(Event:event, const char[] name, bool:dontBroadcast)
 	if(CheckClient(client))
 	{
 		GunMenuEvent_PlayerSpawn(client);
-		DSFEvent_PlayerSpawn(client);
 	}
 }
 
@@ -95,10 +94,9 @@ public Action Event_PlayerDeath(Event:event, const char[] name, bool:dontBroadca
 	int attacker = GetClientOfUserId(event.GetInt("attacker"));
 	int assister = GetClientOfUserId(GetEventInt(event, "assister"));
 	bool headshot = GetEventBool(event, "headshot");
-	int weapon = GetEntPropEnt(attacker, Prop_Data, "m_hActiveWeapon");
-
 	if(CheckClient(attacker))
 	{
+	int weapon = GetEntPropEnt(attacker, Prop_Data, "m_hActiveWeapon");
 	char szWeaponName[32];
 	GetEventString(event, "weapon", szWeaponName, sizeof(szWeaponName));
 	Format(szWeaponName, sizeof(szWeaponName), "weapon_%s", szWeaponName);

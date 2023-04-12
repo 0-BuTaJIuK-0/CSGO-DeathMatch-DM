@@ -22,7 +22,6 @@ This does not change the standard Deathmatch mode, but only complements it and r
     - Sound is disabled when the player kills someone and sound disabled death/spawn
     - Spawn chicken is disabled
     - Unnecessary messages are disabled to the chat
-    - Radar is disabled
 
 ## Use
 - -game_mode 2 -game_type 1
@@ -31,6 +30,7 @@ This does not change the standard Deathmatch mode, but only complements it and r
     ```
     mp_playerid 2 // Controls what information player see in the status bar: 0 all names; 1 team names; 2 no names
     mp_tdm_healthshot_killcount 0 // The damage threshold players have to exceed at the start of the round to be warned/kick.
+    sv_disable_radar 1
     mp_dm_bonus_length_max 0 // Maximum time the bonus time will last (in seconds)
     mp_dm_bonus_length_min 0 // Minimum time the bonus time will last (in seconds)
     mp_dm_bonus_percent 0 // Percent of points additionally awarded when someone gets a kill with the bonus weapon during the bonus period.
@@ -48,7 +48,6 @@ This does not change the standard Deathmatch mode, but only complements it and r
     mp_respawn_immunitytime 0 // How many seconds after respawn immunity lasts. Set to negative value to disable warmup immunity.
     mp_solid_teammates 1 // How solid are teammates: 0 = transparent; 1 = fully solid; 2 = can stand on top of heads
     spec_freeze_time "-0.5" // Time spend frozen in observer freeze cam.
-
     mp_buytime 99999999999 // How many seconds after round start players can buy items for.
     sv_infinite_ammo 2 // Player's active weapon will never run out of ammo. If set to 2 then player has infinite total ammo but still has to reload the
     mp_weapons_allow_zeus 0
