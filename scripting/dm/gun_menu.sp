@@ -1,5 +1,5 @@
-new Handle:g_PercentAWPPlayers;
-new Handle:g_FlagUnlimitedAWP;
+Handle g_PercentAWPPlayers;
+Handle g_FlagUnlimitedAWP;
 
 new String:g_PrimaryGuns[32][32];
 new String:g_SecondaryGuns[32][32];
@@ -98,37 +98,40 @@ iCountFuncUsedClientsAwp()
 
 public Action:CS_OnBuyCommand(client, const String:weapon[]) 
 { 
-	char szWeapon[32];
-	Format(szWeapon, sizeof(szWeapon), "weapon_%s", weapon);
-	if(CheckPrimaryGun(szWeapon))
+	if(CheckClient(client))
 	{
-		strcopy(g_PrimaryGuns[client], sizeof(g_PrimaryGuns[]), szWeapon);
-	}
-	else if(CheckSecondaryGun(szWeapon))
-	{
-		strcopy(g_SecondaryGuns[client], sizeof(g_SecondaryGuns[]), szWeapon);
-	}
-	else if(CheckAutoSniperGun(szWeapon))
-	{
-		CGOPrintToChat(client, "%t%t", "Prefix", "Baned AutoSniper");
-		return Plugin_Handled; 
-	}
-	else if(CheckAWPGun(szWeapon))
-	{
-		decl String:buffer[8]
-		GetConVarString(g_FlagUnlimitedAWP, buffer, sizeof(buffer))
-		if (g_CountUsedClientsAwp < g_CountAvailableAwp || (GetUserFlagBits(client) & ReadFlagString(buffer)))
+		char szWeapon[32];
+		Format(szWeapon, sizeof(szWeapon), "weapon_%s", weapon);
+		if(CheckPrimaryGun(szWeapon))
 		{
 			strcopy(g_PrimaryGuns[client], sizeof(g_PrimaryGuns[]), szWeapon);
 		}
-		else
+		else if(CheckSecondaryGun(szWeapon))
 		{
-			CGOPrintToChat(client, "%t%t", "Prefix", "Message when buying via B awp");
+			strcopy(g_SecondaryGuns[client], sizeof(g_SecondaryGuns[]), szWeapon);
+		}
+		else if(CheckAutoSniperGun(szWeapon))
+		{
+			CGOPrintToChat(client, "%t%t", "Prefix", "Baned AutoSniper");
 			return Plugin_Handled; 
 		}
+		else if(CheckAWPGun(szWeapon))
+		{
+			decl String:buffer[8]
+			GetConVarString(g_FlagUnlimitedAWP, buffer, sizeof(buffer))
+			if (g_CountUsedClientsAwp < g_CountAvailableAwp || (GetUserFlagBits(client) & ReadFlagString(buffer)))
+			{
+				strcopy(g_PrimaryGuns[client], sizeof(g_PrimaryGuns[]), szWeapon);
+			}
+			else
+			{
+				CGOPrintToChat(client, "%t%t", "Prefix", "Message when buying via B awp");
+				return Plugin_Handled; 
+			}
+		}
+		iCountFuncUsedClientsAwp();
 	}
-	iCountFuncUsedClientsAwp();
-	return Plugin_Continue; 
+	return Plugin_Continue;
 }
 
 // ****************************************************************************************************************************************************************************************************
@@ -148,15 +151,6 @@ public Action:GunMenu(client)
 	FormatEx(szBuffer, sizeof(szBuffer), "%T", "Title Primary GunMenu", client);
 
 	gMenu.SetTitle(szBuffer);
-	/* // Отключать пушки, которые уже у тебя.
-	char WeaponName[32];
-	WeaponName = g_PrimaryGuns[client];
-	PrintToChatAll("%s", WeaponName);
-
-	if (!StrEqual(WeaponName,"weapon_ak47"))
-	{gMenu.AddItem("weapon_ak47", "AK47");}
-	else{gMenu.AddItem("weapon_ak47", "AK47 (use)", ITEMDRAW_DISABLED);}
-	*/
 	gMenu.AddItem("weapon_ak47", "AK-47");
 	gMenu.AddItem("weapon_m4a1", "M4A4");
 	gMenu.AddItem("weapon_m4a1_silencer", "M4A1-S");

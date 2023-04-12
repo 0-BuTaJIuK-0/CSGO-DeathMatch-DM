@@ -14,7 +14,7 @@ public Plugin:myinfo =
 	author = "0-BuTaJIuK-0",
 	description = "DeathMath",
 	version = "1.0",
-	url = "https://butagames.ru"
+	url = "https://github.com/0-BuTaJIuK-0/CSGO-DeathMath-DM"
 };
 
 public OnPluginStart()	
@@ -32,8 +32,12 @@ public OnPluginStart()
 	g_PercentAWPPlayers = CreateConVar("dm_PercentAWPPlayers", "35", "Sets the percentage of players who can take awp (100 - allow all)", _, true, 0.0, true, 100.0);
 	HookConVarChange(g_PercentAWPPlayers, iCountFuncAvailableAwpKostil);
 	g_FlagUnlimitedAWP = CreateConVar("dm_FlagUnlimitedAWP", "o", "Specifies the flag of the players who have unlimited use of AWP available");
+
 	g_HPKill = CreateConVar("dm_HPKill", "15", "the amount of hp replenished when killing", _, true, 0.0, true, 100.0);
 	g_HPKillHS = CreateConVar("dm_HPKillHS", "25", "the amount of hp replenished when killing in the head", _, true, 0.0, true, 100.0);
+
+	g_Victim = CreateConVar("dm_killfeed_filter_victim", "1", "Show Feed to Dead Player", _, true, 0.0, true, 1.0);
+	g_Assister = CreateConVar("dm_killfeed_filter_assister", "0", "Show Feed to Assister Player", _, true, 0.0, true, 1.0);
 
 	RegConsoleCmd("sm_guns", GunMenuKostil);
 	RegConsoleCmd("sm_gun", GunMenuKostil);
@@ -45,8 +49,16 @@ public OnPluginStart()
 	RegConsoleCmd("drop", BlockBuyAndMenu);
 
 	HookEvent("player_spawn", Event_PlayerSpawn);
-	HookEvent("player_death", Event_PlayerDeath);
+	HookEvent("player_death", Event_PlayerDeath, EventHookMode_Pre);
 
+	HookEvent("round_freeze_end", DisableMessages, EventHookMode_Pre);
+	HookEvent("player_team", DisableMessages, EventHookMode_Pre);
+	HookEvent("player_connect", DisableMessages, EventHookMode_Pre);
+	HookEvent("player_disconnect", DisableMessages, EventHookMode_Pre);
+	HookUserMessage(GetUserMessageId("TextMsg"), DisableChat, true);
+	HookUserMessage(GetUserMessageId("RadioText"), DisableRadio, true);
+	AddNormalSoundHook(DisableSound);
+	
 	LoadTranslations("csgo_deathmath.phrases");
 }
 
@@ -68,27 +80,65 @@ public OnClientDisconnect(client)
 }
 
 public Event_PlayerSpawn(Event:event, const char[] name, bool:dontBroadcast)
-{
+{	
 	new client = GetClientOfUserId(event.GetInt("userid"));
 	if(CheckClient(client))
 	{
 		GunMenuEvent_PlayerSpawn(client);
+		DSFEvent_PlayerSpawn(client);
 	}
 }
 
-public Event_PlayerDeath(Event:event, const char[] name, bool:dontBroadcast)
+public Action Event_PlayerDeath(Event:event, const char[] name, bool:dontBroadcast)
 {
-	int attack = GetClientOfUserId(event.GetInt("attacker"));
 	int victim = GetClientOfUserId(event.GetInt("userid"));
+	int attacker = GetClientOfUserId(event.GetInt("attacker"));
+	int assister = GetClientOfUserId(GetEventInt(event, "assister"));
 	bool headshot = GetEventBool(event, "headshot");
-	int weapon = GetEntPropEnt(attack, Prop_Data, "m_hActiveWeapon");
+	int weapon = GetEntPropEnt(attacker, Prop_Data, "m_hActiveWeapon");
 
+	if(CheckClient(attacker))
+	{
 	char szWeaponName[32];
 	GetEventString(event, "weapon", szWeaponName, sizeof(szWeaponName));
 	Format(szWeaponName, sizeof(szWeaponName), "weapon_%s", szWeaponName);
 
+	HpAmmoEvent_PlayerDeath(attacker, victim, weapon, szWeaponName, headshot);
 
-	HpAmmoEvent_PlayerDeath(attack, victim, weapon, szWeaponName, headshot);
+	RemoveSound(attacker);
+	RequestFrame(RemoveSound, attacker);
+	}
+	SetEntProp(victim, Prop_Send, "m_bPlayerDominatingMe", false, _, attacker);
+	SetEntProp(attacker, Prop_Send, "m_bPlayerDominated", false, _, victim);
+
+	event.SetBool("dominated", false);
+	//event.SetBool("assister", false);
+	event.SetBool("revenge", false);
+
+	event.BroadcastDisabled = true;
+		
+	if(IsValidClient(attacker) && !IsFakeClient(attacker))
+	{
+		event.FireToClient(attacker);
+	}
+	if(GetConVarInt(g_Victim) != 0 && attacker != victim && IsValidClient(victim) && !IsFakeClient(victim))
+	{
+		event.FireToClient(victim);
+	}
+	if(GetConVarInt(g_Assister) != 0 && victim != assister && IsValidClient(assister) && !IsFakeClient(assister))
+	{
+		event.FireToClient(assister);
+	}
+
+	return Plugin_Continue;
+}
+
+bool IsValidClient(int client)
+{
+	if(client <= 0 ) return false;
+	if(client > MaxClients) return false;
+	if(!IsClientConnected(client)) return false;
+	return IsClientInGame(client);
 }
 
 bool CheckClient(int client)

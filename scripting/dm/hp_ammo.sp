@@ -1,39 +1,39 @@
-new Handle:g_HPKill;
-new Handle:g_HPKillHS;
+Handle g_HPKill;
+Handle g_HPKillHS;
 
 int AMMOPrimaryGun[MAXPLAYERS+1];
 int AMMOSecondaryGun[MAXPLAYERS+1];
 
 public HpAmmoOnClientPutInServer(client)
 {
-		SDKHook(client, SDKHook_WeaponEquip, OnWeaponEquip);
+	SDKHook(client, SDKHook_WeaponEquip, OnWeaponEquip);
 }
 
-public HpAmmoEvent_PlayerDeath(attack, victim, weapon, char[] szWeaponName, headshot)
+public HpAmmoEvent_PlayerDeath(attacker, victim, weapon, char[] szWeaponName, headshot)
 {
-	int szHealth = GetEntProp(attack, Prop_Send, "m_iHealth");
+	int szHealth = GetEntProp(attacker, Prop_Send, "m_iHealth");
 	if(szHealth < 100)
 	{
 		if(headshot)
 		{
 			if(szHealth + GetConVarInt(g_HPKillHS) > 100)
 			{
-				SetEntProp(attack, Prop_Send, "m_iHealth", 100);
+				SetEntProp(attacker, Prop_Send, "m_iHealth", 100);
 			}
 			else
 			{
-				SetEntProp(attack, Prop_Send, "m_iHealth", szHealth + GetConVarInt(g_HPKillHS));
+				SetEntProp(attacker, Prop_Send, "m_iHealth", szHealth + GetConVarInt(g_HPKillHS));
 			}
 		}
 		else
 		{
 			if(szHealth + GetConVarInt(g_HPKill) > 100)
 			{
-				SetEntProp(attack, Prop_Send, "m_iHealth", 100);
+				SetEntProp(attacker, Prop_Send, "m_iHealth", 100);
 			}
 			else
 			{
-				SetEntProp(attack, Prop_Send, "m_iHealth", szHealth + GetConVarInt(g_HPKill));
+				SetEntProp(attacker, Prop_Send, "m_iHealth", szHealth + GetConVarInt(g_HPKill));
 			}
 		}
 	}
@@ -42,11 +42,11 @@ public HpAmmoEvent_PlayerDeath(attack, victim, weapon, char[] szWeaponName, head
 	{
 		if(CheckPrimaryGun(szWeaponName) || CheckAWPGun(szWeaponName))
 		{
-			SetEntProp(weapon, Prop_Data, "m_iClip1", AMMOPrimaryGun[attack]+1);
+			SetEntProp(weapon, Prop_Data, "m_iClip1", AMMOPrimaryGun[attacker]+1);
 		}
 		else if(CheckSecondaryGun(szWeaponName))
 		{
-			SetEntProp(weapon, Prop_Data, "m_iClip1", AMMOSecondaryGun[attack]+1);
+			SetEntProp(weapon, Prop_Data, "m_iClip1", AMMOSecondaryGun[attacker]+1);
 		}
 	}
 
