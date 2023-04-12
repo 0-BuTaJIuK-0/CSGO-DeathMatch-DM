@@ -12,9 +12,9 @@ public Plugin:myinfo =
 {
 	name = "DM",
 	author = "0-BuTaJIuK-0",
-	description = "DeathMath",
+	description = "DeathMatch",
 	version = "1.0",
-	url = "https://github.com/0-BuTaJIuK-0/CSGO-DeathMath-DM"
+	url = "https://github.com/0-BuTaJIuK-0/CSGO-DeathMatch-DM"
 };
 
 public OnPluginStart()	
