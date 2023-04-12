@@ -4,8 +4,8 @@
 
 	"Prefix"
 	{
-		"en"      "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] "
-		"ru"      "{DEFAULT}[{LIGHTBLUE}WildLeague{DEFAULT}] "
+		"en"      "{DEFAULT}[{LIGHTBLUE}DM{DEFAULT}] "
+		"ru"      "{DEFAULT}[{LIGHTBLUE}DM{DEFAULT}] "
 	}
 
 	"How to buy"

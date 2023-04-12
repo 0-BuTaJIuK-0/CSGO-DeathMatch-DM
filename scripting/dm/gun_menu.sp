@@ -163,7 +163,7 @@ public Action:GunMenu(client)
 	}
 	else
 	{
-		gMenu.AddItem("weapon_awp", "AWP (PREMIUM)", ITEMDRAW_DISABLED);
+		gMenu.AddItem("weapon_awp", "AWP (limited)", ITEMDRAW_DISABLED);
 	}
 
 	gMenu.AddItem("weapon_sg556", "SG 553");

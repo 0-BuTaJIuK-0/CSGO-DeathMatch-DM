@@ -1,7 +1,7 @@
-# CSGO Deathmatch (DM) mode
+# CSGO DeathMatch (DM) mode
 
 ## Info
-This does not change the standard Deathmatch mode, but only complements it and removes unnecessary functional.
+This plugin does not replace the standard Deathmatch mode, but only complements it and removes unnecessary functionality.
 
 ## Functional 
 - WeaponMenu (Integrated with the standard purchase menu)
@@ -24,8 +24,9 @@ This does not change the standard Deathmatch mode, but only complements it and r
     - Unnecessary messages are disabled to the chat
 
 ## Use
-- -game_mode 2 -game_type 1
-- config
+- Gamemode DeathMath `-game_mode 2 -game_type 1`
+- Change the prefix to your in translate.phrases
+- Config
     - CFG  
     ```
     mp_playerid 2 // Controls what information player see in the status bar: 0 all names; 1 team names; 2 no names
@@ -42,7 +43,7 @@ This does not change the standard Deathmatch mode, but only complements it and r
     mp_dm_time_between_bonus_max 999 // Maximum time a bonus time will start after the round start or after the last bonus (in seconds)
     mp_dm_time_between_bonus_min 999 // Minimum time a bonus time will start after the round start or after the last bonus (in seconds)
     ```
-    - Gamemode
+    - Gamemode or exec
     ```
     mp_buy_during_immunity 0 // When set, players can buy when immune, ignoring buytime. 0 = default. 1 = both teams. 2 = Terrorists. 3 = Counter-Terrorists.
     mp_respawn_immunitytime 0 // How many seconds after respawn immunity lasts. Set to negative value to disable warmup immunity.
