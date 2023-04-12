@@ -3,7 +3,7 @@ Handle g_FlagUnlimitedAWP;
 
 new String:g_PrimaryGuns[32][32];
 new String:g_SecondaryGuns[32][32];
-new bool:g_ClientFirstConnect[MAXPLAYERS+1] = {true, ...};
+bool g_ClientFirstConnectMenu[MAXPLAYERS+1] = {true, ...};
 int g_CountAvailableAwp;
 int g_CountUsedClientsAwp;
 
@@ -28,7 +28,7 @@ public GunMenuOnClientDisconnect(client)
 {
 	strcopy(g_PrimaryGuns[client], sizeof(g_PrimaryGuns[]), "weapon_ak47");
 	strcopy(g_SecondaryGuns[client], sizeof(g_SecondaryGuns[]), "weapon_deagle");
-	g_ClientFirstConnect[client] = true;
+	g_ClientFirstConnectMenu[client] = true;
 	iCountFuncAvailableAwp();
 	iCountFuncUsedClientsAwp();
 }
@@ -37,7 +37,7 @@ public GunMenuEvent_PlayerSpawn(client)
 {
 	GivePrimary(client);
 	GiveSecondary(client);
-	if(g_ClientFirstConnect[client])
+	if(g_ClientFirstConnectMenu[client])
 	{
 		GunMenu(client);
 		CGOPrintToChat(client, "%t%t", "Prefix", "How to buy", "G");
@@ -268,7 +268,7 @@ public MenuHandler_gszMenu(Menu gszMenu, MenuAction action, int client, int item
 			gszMenu.GetItem(item, weapon_name, sizeof(weapon_name));
 			strcopy(g_SecondaryGuns[client], sizeof(g_SecondaryGuns[]), weapon_name);
 			GiveSecondary(client);
-			g_ClientFirstConnect[client] = false;
+			g_ClientFirstConnectMenu[client] = false;
 		}
         case MenuAction_End:
         {
