@@ -57,6 +57,7 @@ public OnPluginStart()
 	HookEvent("player_disconnect", DisableMessages, EventHookMode_Pre);
 	HookUserMessage(GetUserMessageId("TextMsg"), DisableChat, true);
 	HookUserMessage(GetUserMessageId("RadioText"), DisableRadio, true);
+	AddTempEntHook("Sparks", DisableEffect);
 	AddNormalSoundHook(DisableSound);
 	
 	LoadTranslations("csgo_deathmath.phrases");
@@ -145,7 +146,7 @@ bool CheckClient(int client)
 }
 
 // ****************************************************************************************************************************************************************************************************
-// Проверка, какое оружие
+// Проверка, какое оружие 
 
 bool CheckPrimaryGun(const char[] szWeapon)
 {

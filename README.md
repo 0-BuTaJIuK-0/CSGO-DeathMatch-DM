@@ -1,34 +1,38 @@
 # CSGO DeathMatch (DM) mode
 
-## Info
+## Information
+
 This plugin does not replace the standard Deathmatch mode, but only complements it and removes unnecessary functionality.
 
-## Functional 
+## Functional
+
 - WeaponMenu (Integrated with the standard purchase menu)
-    - To open: sm_guns or button G (first spawn, open automatically)
-    - Saves weapons from the plugin menu and the standard buy menu
-    - AWP limit in 35% (to change it, use in the config `dm_PercentAWPPlayers "35"`)
-    - Flag for unlimited use of AWP "o" (to change it, use in the config `dm_FlagUnlimitedAWP "o"`)
-    - Block autobuy/rebuy/buyrandom/drop
+  - To open: sm_guns or button G (first spawn, open automatically)
+  - Saves weapons from the plugin menu and the standard buy menu
+  - AWP limit in 35% (to change it, use in the config `dm_PercentAWPPlayers "35"`)
+  - Flag for unlimited use of AWP "o" (to change it, use in the config `dm_FlagUnlimitedAWP "o"`)
+  - Block autobuy/rebuy/buyrandom/drop
 - HP Recovery
-    - Killing restores 15 hp (to change it, use in the config `dm_HPKill "15"`)
-    - Killing in the head restores 25 hp (to change it, use in the config `dm_HPKillHS "25"`)
+  - Killing restores 15 hp (to change it, use in the config `dm_HPKill "15"`)
+  - Killing in the head restores 25 hp (to change it, use in the config `dm_HPKillHS "25"`)
 - Recovery of ammo when killing
 - Shows only kills of the player in his feed
-    - `dm_killfeed_filter_victim "1"` - show Feed to Dead Player
-    - `dm_killfeed_filter_assister "0"`- show Feed to Assister Player
+  - `dm_killfeed_filter_victim "1"` - show Feed to Dead Player
+  - `dm_killfeed_filter_assister "0"`- show Feed to Assister Player
 - Abolished
-    - The system is disabled dominated/revenge/assister
-    - Sound is disabled when the player kills someone and sound disabled death/spawn
-    - Spawn chicken is disabled
-    - Unnecessary messages are disabled to the chat
+  - The system is disabled dominated/revenge/assister
+  - Sound is disabled when the player kills someone and sound disabled death/spawn
+  - Spawn chicken is disabled
+  - Unnecessary messages are disabled to the chat
+  - Sparks is disabled, when hit effect when `mp_damage_headshot_only "1"`
 
-## Use
+## Setup
+
 - Gamemode DeathMath `-game_mode 2 -game_type 1`
 - Change the prefix to your in translate.phrases
-- Config
-    - CFG  
-    ```
+- Configuration
+    - CFG
+  ```
     mp_playerid 2 // Controls what information player see in the status bar: 0 all names; 1 team names; 2 no names
     mp_tdm_healthshot_killcount 0 // The damage threshold players have to exceed at the start of the round to be warned/kick.
     sv_disable_radar 1
@@ -42,9 +46,10 @@ This plugin does not replace the standard Deathmatch mode, but only complements 
     mp_dm_teammode_kill_score 0 // Team deathmatch victory points to award for enemy kill
     mp_dm_time_between_bonus_max 999 // Maximum time a bonus time will start after the round start or after the last bonus (in seconds)
     mp_dm_time_between_bonus_min 999 // Minimum time a bonus time will start after the round start or after the last bonus (in seconds)
-    ```
-    - Gamemode or exec
-    ```
+  ```
+
+  - Gamemode or "exec u_config.cfg"
+  ```
     mp_buy_during_immunity 0 // When set, players can buy when immune, ignoring buytime. 0 = default. 1 = both teams. 2 = Terrorists. 3 = Counter-Terrorists.
     mp_respawn_immunitytime 0 // How many seconds after respawn immunity lasts. Set to negative value to disable warmup immunity.
     mp_solid_teammates 1 // How solid are teammates: 0 = transparent; 1 = fully solid; 2 = can stand on top of heads
@@ -61,8 +66,9 @@ This plugin does not replace the standard Deathmatch mode, but only complements 
     mp_ct_default_primary ""
     mp_t_default_primary ""
     mp_items_prohibited "11,38" // block AutoSniper
-    ```
+  ```
 
 ## Thanks
+
 [Grey83 (gunmenu)](https://github.com/Grey83/SourceMod-plugins/blob/master/SM/scripting/css_gunmenu.sp)  
 [Alexey-Gamov (csgo-advanced-dm)](https://github.com/alexey-gamov/csgo-advanced-dm)

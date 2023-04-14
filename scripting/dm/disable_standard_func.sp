@@ -69,3 +69,8 @@ public Action DisableMessages(Event hEvent, const char[] name, bool dontBroadcas
 {
 	return Plugin_Handled;
 }
+
+public Action DisableEffect(const char[] name, const int[] clients, int num, float delay)
+{
+	return Plugin_Handled;
+}
